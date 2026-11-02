@@ -1,0 +1,30 @@
+{
+  "name": "f1-telemetry-2025",
+  "version": "1.0.0",
+  "description": "2025 Formula 1 telemetry dataset — per-lap telemetry, lap times, weather, race control messages, and driver standings for all 24 Grand Prix weekends. Source: TracingInsights.com",
+  "main": "index.js",
+  "type": "module",
+  "exports": {
+    ".": "./index.js",
+    "./schema": "./schema.json"
+  },
+  "keywords": [
+    "formula1",
+    "f1",
+    "telemetry",
+    "motorsport",
+    "dataset",
+    "machine-learning",
+    "2025"
+  ],
+  "author": "TracingInsights (https://tracinginsights.com/)",
+  "license": "CC-BY-4.0",
+  "homepage": "https://tracinginsights.com/",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bonk18/F1"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

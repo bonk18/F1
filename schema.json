@@ -1,0 +1,208 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "F1 2025 Telemetry Dataset Schema",
+  "description": "JSON schema definitions for all data files in the f1-telemetry-2025 package",
+  "definitions": {
+
+    "Driver": {
+      "type": "object",
+      "description": "Driver metadata entry from drivers.json",
+      "properties": {
+        "driver": { "type": "string", "description": "3-letter driver code (e.g. VER, NOR)" },
+        "team":   { "type": "string", "description": "Constructor name" },
+        "dn":     { "type": "string", "description": "Driver race number" },
+        "fn":     { "type": "string", "description": "First name" },
+        "ln":     { "type": "string", "description": "Last name" },
+        "tc":     { "type": "string", "description": "Team hex color code (without #)" },
+        "url":    { "type": "string", "description": "Driver portrait image URL" }
+      },
+      "required": ["driver", "team", "dn", "fn", "ln", "tc"]
+    },
+
+    "DriversFile": {
+      "type": "object",
+      "description": "drivers.json — session participant list",
+      "properties": {
+        "drivers": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/Driver" }
+        }
+      },
+      "required": ["drivers"]
+    },
+
+    "WeatherFile": {
+      "type": "object",
+      "description": "weather.json — time-series weather readings sampled at ~60s intervals",
+      "properties": {
+        "wT":   { "type": "array", "items": { "type": "number" }, "description": "Session time in seconds for each sample" },
+        "wAT":  { "type": "array", "items": { "type": "number" }, "description": "Air temperature (°C)" },
+        "wH":   { "type": "array", "items": { "type": "number" }, "description": "Humidity (%)" },
+        "wP":   { "type": "array", "items": { "type": "number" }, "description": "Air pressure (mbar)" },
+        "wR":   { "type": "array", "items": { "type": "boolean" }, "description": "Rainfall boolean" },
+        "wTT":  { "type": "array", "items": { "type": "number" }, "description": "Track temperature (°C)" },
+        "wWD":  { "type": "array", "items": { "type": "number" }, "description": "Wind direction (degrees)" },
+        "wWS":  { "type": "array", "items": { "type": "number" }, "description": "Wind speed (m/s)" }
+      },
+      "required": ["wT", "wAT", "wH", "wP", "wR", "wTT", "wWD", "wWS"]
+    },
+
+    "CornersFile": {
+      "type": "object",
+      "description": "corners.json — track corner geometry",
+      "properties": {
+        "CornerNumber": { "type": "array", "items": { "type": "integer" }, "description": "Corner number label" },
+        "X":            { "type": "array", "items": { "type": "number" }, "description": "X coordinate on track map" },
+        "Y":            { "type": "array", "items": { "type": "number" }, "description": "Y coordinate on track map" },
+        "Angle":        { "type": "array", "items": { "type": "number" }, "description": "Corner angle (degrees)" },
+        "Distance":     { "type": "array", "items": { "type": "number" }, "description": "Distance from start/finish (metres)" }
+      },
+      "required": ["CornerNumber", "X", "Y", "Angle", "Distance"]
+    },
+
+    "RCMFile": {
+      "type": "object",
+      "description": "rcm.json — race control messages (flags, VSC, SC, penalties, etc.)",
+      "properties": {
+        "time":   { "type": "array", "items": { "type": "number" }, "description": "Session time in seconds" },
+        "cat":    { "type": "array", "items": { "type": "string" }, "description": "Message category" },
+        "msg":    { "type": "array", "items": { "type": "string" }, "description": "Full message text" },
+        "status": { "type": "array", "items": { "type": "string" }, "description": "Status (Enabled/Disabled etc)" },
+        "flag":   { "type": "array", "items": { "type": "string" }, "description": "Flag type (YELLOW, RED, SC, VSC …)" },
+        "scope":  { "type": "array", "items": { "type": "string" }, "description": "Scope (Track / Sector / Driver)" },
+        "sector": { "type": "array", "items": { "type": ["integer", "null"] }, "description": "Sector number if scoped" },
+        "dNum":   { "type": "array", "items": { "type": ["string", "null"] }, "description": "Driver race number if scoped" },
+        "lap":    { "type": "array", "items": { "type": ["integer", "null"] }, "description": "Lap number if available" }
+      },
+      "required": ["time", "cat", "msg"]
+    },
+
+    "SessionLaptimes": {
+      "type": "object",
+      "description": "session_laptimes.json — aggregated lap data for all drivers in columnar format",
+      "properties": {
+        "time":     { "type": "array", "items": { "type": "number" }, "description": "Lap time in seconds" },
+        "lap":      { "type": "array", "items": { "type": "integer" }, "description": "Lap number" },
+        "compound": { "type": "array", "items": { "type": "string" }, "description": "Tyre compound (SOFT/MEDIUM/HARD/INTERMEDIATE/WET)" },
+        "stint":    { "type": "array", "items": { "type": "integer" }, "description": "Stint number" },
+        "s1":       { "type": "array", "items": { "type": "number" }, "description": "Sector 1 time (s)" },
+        "s2":       { "type": "array", "items": { "type": "number" }, "description": "Sector 2 time (s)" },
+        "s3":       { "type": "array", "items": { "type": "number" }, "description": "Sector 3 time (s)" },
+        "pos":      { "type": "array", "items": { "type": "integer" }, "description": "Race/session position" },
+        "drv":      { "type": "array", "items": { "type": "string" }, "description": "3-letter driver code" },
+        "dNum":     { "type": "array", "items": { "type": "string" }, "description": "Driver race number" },
+        "team":     { "type": "array", "items": { "type": "string" }, "description": "Team name" },
+        "fresh":    { "type": "array", "items": { "type": "boolean" }, "description": "Whether the tyre was a fresh set" },
+        "pin":      { "type": "array", "items": { "type": "boolean" }, "description": "Pit in this lap" },
+        "pout":     { "type": "array", "items": { "type": "boolean" }, "description": "Pit out this lap" },
+        "wAT":      { "type": "array", "items": { "type": "number" }, "description": "Air temperature at lap time" },
+        "wTT":      { "type": "array", "items": { "type": "number" }, "description": "Track temperature at lap time" },
+        "wH":       { "type": "array", "items": { "type": "number" }, "description": "Humidity at lap time" },
+        "wR":       { "type": "array", "items": { "type": "boolean" }, "description": "Rainfall at lap time" }
+      },
+      "required": ["time", "lap", "compound", "stint", "drv"]
+    },
+
+    "TelemetryLap": {
+      "type": "object",
+      "description": "<lap>_tel.json — high-frequency car telemetry for one lap",
+      "properties": {
+        "tel": {
+          "type": "object",
+          "description": "All channels as parallel arrays (same length)",
+          "properties": {
+            "time":                   { "type": "array", "items": { "type": "number" }, "description": "Elapsed seconds since lap start" },
+            "rpm":                    { "type": "array", "items": { "type": "number" }, "description": "Engine RPM" },
+            "speed":                  { "type": "array", "items": { "type": "number" }, "description": "Speed in km/h" },
+            "gear":                   { "type": "array", "items": { "type": "integer" }, "description": "Gear (0 = neutral)" },
+            "throttle":               { "type": "array", "items": { "type": "number" }, "description": "Throttle 0–100 (%)" },
+            "brake":                  { "type": "array", "items": { "type": ["number", "boolean"] }, "description": "Brake (0/1)" },
+            "drs":                    { "type": "array", "items": { "type": "integer" }, "description": "DRS state (0=closed, 10/12/14=open)" },
+            "distance":               { "type": "array", "items": { "type": "number" }, "description": "Track distance in metres" },
+            "rel_distance":           { "type": "array", "items": { "type": "number" }, "description": "Relative distance 0.0–1.0" },
+            "DriverAhead":            { "type": "array", "items": { "type": "string" }, "description": "Code of car ahead" },
+            "DistanceToDriverAhead":  { "type": "array", "items": { "type": "number" }, "description": "Gap to car ahead (m)" },
+            "acc_x":                  { "type": "array", "items": { "type": "number" }, "description": "Lateral G-force" },
+            "acc_y":                  { "type": "array", "items": { "type": "number" }, "description": "Longitudinal G-force" },
+            "acc_z":                  { "type": "array", "items": { "type": "number" }, "description": "Vertical G-force" },
+            "x":                      { "type": "array", "items": { "type": "number" }, "description": "Car X on track map" },
+            "y":                      { "type": "array", "items": { "type": "number" }, "description": "Car Y on track map" },
+            "z":                      { "type": "array", "items": { "type": "number" }, "description": "Car altitude Z" }
+          },
+          "required": ["time", "speed", "rpm", "gear", "throttle", "brake"]
+        }
+      }
+    },
+
+    "DriverLaptimes": {
+      "type": "object",
+      "description": "laptimes.json — per-lap metadata for a single driver",
+      "properties": {
+        "time":     { "type": "array", "items": { "type": "number" }, "description": "Lap time in seconds" },
+        "lap":      { "type": "array", "items": { "type": "integer" }, "description": "Lap number" },
+        "compound": { "type": "array", "items": { "type": "string" }, "description": "Tyre compound" },
+        "stint":    { "type": "array", "items": { "type": "integer" }, "description": "Stint number" },
+        "s1":       { "type": "array", "items": { "type": "number" }, "description": "Sector 1 time (s)" },
+        "s2":       { "type": "array", "items": { "type": "number" }, "description": "Sector 2 time (s)" },
+        "s3":       { "type": "array", "items": { "type": "number" }, "description": "Sector 3 time (s)" },
+        "pos":      { "type": "array", "items": { "type": "integer" }, "description": "Track position during lap" },
+        "fresh":    { "type": "array", "items": { "type": "boolean" }, "description": "Fresh tyre set flag" },
+        "pin":      { "type": "array", "items": { "type": "boolean" }, "description": "Pit in lap" },
+        "pout":     { "type": "array", "items": { "type": "boolean" }, "description": "Pit out lap" },
+        "wAT":      { "type": "array", "items": { "type": "number" } },
+        "wTT":      { "type": "array", "items": { "type": "number" } },
+        "wH":       { "type": "array", "items": { "type": "number" } },
+        "wR":       { "type": "array", "items": { "type": "boolean" } },
+        "iacc":     { "type": "array", "items": { "type": "integer" }, "description": "Incident accumulator" }
+      },
+      "required": ["time", "lap"]
+    },
+
+    "StandingsFile": {
+      "type": "object",
+      "description": "standings.json — championship standings",
+      "properties": {
+        "last_updated": { "type": "string" },
+        "season":       { "type": "string" },
+        "drivers": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "position":               { "type": "integer" },
+              "driver":                 { "type": "string" },
+              "number":                 { "type": "integer" },
+              "team":                   { "type": "string" },
+              "wins":                   { "type": "integer" },
+              "podiums":                { "type": "integer" },
+              "points":                 { "type": "number" },
+              "last_race_points":       { "type": "number" },
+              "fastest_laps":           { "type": "integer" },
+              "pole_positions":         { "type": "integer" },
+              "dnf_count":              { "type": "integer" },
+              "average_finish_position":{ "type": "number" },
+              "points_per_race":        { "type": "number" },
+              "is_rookie":              { "type": "boolean" },
+              "driver_nation":          { "type": "string" },
+              "qualifying_performance": { "type": "number" }
+            },
+            "required": ["position", "driver", "team", "points"]
+          }
+        },
+        "teams": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "position": { "type": "integer" },
+              "team":     { "type": "string" },
+              "points":   { "type": "number" }
+            },
+            "required": ["position", "team", "points"]
+          }
+        }
+      },
+      "required": ["season", "drivers", "teams"]
+    }
+  }
+}

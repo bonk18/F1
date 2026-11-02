@@ -1,0 +1,14 @@
+# Large dataset directory (29GB)
+2025/
+
+# Dependencies
+node_modules/
+
+# Logs
+*.log
+npm-debug.log*
+
+# System & IDE
+.DS_Store
+.idea/
+.vscode/
